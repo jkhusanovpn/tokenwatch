@@ -4,13 +4,22 @@
   "description": "Zero-config LLM cost & quality monitor for indie AI builders. One-line SDK, local dashboard, budget kill-switch.",
   "type": "module",
   "license": "MIT",
-  "keywords": ["llm", "observability", "cost-tracking", "openai", "anthropic", "claude", "monitoring", "helicone-alternative"],
+  "keywords": [
+    "llm",
+    "observability",
+    "cost-tracking",
+    "openai",
+    "anthropic",
+    "claude",
+    "monitoring",
+    "helicone-alternative"
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/jkhusanovpn/tokenwatch"
+    "url": "git+https://github.com/jkhusanovpn/tokenwatch.git"
   },
   "bin": {
-    "tokenwatch": "./dist/cli.js"
+    "tokenwatch": "dist/cli.js"
   },
   "main": "./dist/sdk.js",
   "types": "./dist/sdk.d.ts",
