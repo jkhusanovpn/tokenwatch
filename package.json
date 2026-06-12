@@ -1,0 +1,36 @@
+{
+  "name": "tokenwatch",
+  "version": "0.1.0",
+  "description": "Zero-config LLM cost & quality monitor for indie AI builders. One-line SDK, local dashboard, budget kill-switch.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "tokenwatch": "./dist/cli.js"
+  },
+  "main": "./dist/sdk.js",
+  "types": "./dist/sdk.d.ts",
+  "exports": {
+    ".": "./dist/sdk.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsx src/cli.ts serve",
+    "build": "tsc -p tsconfig.json",
+    "demo": "tsx scripts/demo.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.0",
+    "hono": "^4.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=22.5"
+  }
+}
