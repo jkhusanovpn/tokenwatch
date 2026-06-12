@@ -10,6 +10,8 @@ TokenWatch is `npx tokenwatch-sdk serve` (one process, Node's built-in SQLite) p
 
 v0.1, MIT. The pricing table covers June-2026 models and is overridable. Streaming usage is captured via stream.tee() so your stream is untouched.
 
+It also tracks coding agents: `tokenwatch watch` tails Claude Code and Codex CLI session logs (read-only) and attributes their spend per project — backfilling my own history showed $880 of API-value I had no visibility into.
+
 Things I'd love feedback on: the no-proxy tradeoff (you lose request bodies, keep reliability), whether kill-switch-as-exception is the right ergonomics, and what "quality regression" detection should look like for a tool this small.
 
 https://github.com/jkhusanovpn/tokenwatch

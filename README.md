@@ -51,6 +51,18 @@ import { track } from 'tokenwatch';
 track({ model: 'claude-fable-5', inputTokens: 1200, outputTokens: 400, feature: 'batch-job', customerId: 'acme' });
 ```
 
+### Track your coding agents too
+
+Claude Code and Codex CLI make API calls you can't wrap — but they write session logs. `tokenwatch watch` tails them (read-only, no proxy, no agent config):
+
+```bash
+npx tokenwatch-sdk serve --watch --backfill   # server + agent-log watcher in one process
+# or separately:
+npx tokenwatch-sdk watch --backfill           # Claude Code (~/.claude) + Codex (~/.codex)
+```
+
+Spend appears per agent (`claude-code`, `codex`) and per project. Note: if you're on a subscription plan, the dollar figures are API-equivalent value, not your actual bill. Antigravity doesn't expose local session logs yet — open an issue if you know a way in.
+
 ### Budgets & alerts
 
 Set a monthly budget in the dashboard (or `POST /v1/settings`). At 80% and 100% TokenWatch fires your webhook; at 100% `enforceBudget: true` makes wrapped calls throw `BudgetExceededError` instead of burning money.
