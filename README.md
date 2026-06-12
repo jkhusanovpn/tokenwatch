@@ -1,5 +1,7 @@
 # TokenWatch
 
+**[Website](https://jkhusanovpn.github.io/tokenwatch/)** · **[npm](https://www.npmjs.com/package/tokenwatch-sdk)**
+
 **Know where your LLM money goes.** Zero-config cost & quality monitor for indie AI builders: one-line SDK, local dashboard, per-feature/per-customer attribution, and a budget kill-switch so an agent loop can never surprise you with a 5-figure bill.
 
 - No proxy in your request path — your calls go straight to the provider, telemetry is sent async on the side
