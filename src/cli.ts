@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import './suppress-warnings.js';
 import { mkdirSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join, dirname } from 'node:path';

@@ -1,8 +1,12 @@
 import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
-import { DatabaseSync } from 'node:sqlite';
+import { createRequire } from 'node:module';
 import { computeCostUsd } from './pricing.js';
 import { dashboardHtml } from './dashboard.js';
+
+// Lazy-require node:sqlite so its ExperimentalWarning fires after our suppressor
+// (static `import 'node:sqlite'` emits the warning during module linking).
+const { DatabaseSync } = createRequire(import.meta.url)('node:sqlite') as typeof import('node:sqlite');
 
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS events (
@@ -222,6 +226,17 @@ export function createApp(dbPath: string) {
 export function startServer(opts: { port: number; dbPath: string }) {
   const { app } = createApp(opts.dbPath);
   const server = serve({ fetch: app.fetch, port: opts.port });
+  (server as any).on?.('error', (err: NodeJS.ErrnoException) => {
+    if (err?.code === 'EADDRINUSE') {
+      console.error(
+        `\nTokenWatch: port ${opts.port} is already in use.\n` +
+          `Probably another TokenWatch is running — open http://localhost:${opts.port} to check,\n` +
+          `or start on a different port:  tokenwatch serve --port ${opts.port + 1}\n`
+      );
+      process.exit(1);
+    }
+    throw err;
+  });
   console.log(`TokenWatch running → http://localhost:${opts.port}  (db: ${opts.dbPath})`);
   return server;
 }
