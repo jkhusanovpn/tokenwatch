@@ -1,6 +1,6 @@
 {
   "name": "tokenwatch-sdk",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Zero-config LLM cost & quality monitor for indie AI builders. One-line SDK, local dashboard, budget kill-switch.",
   "type": "module",
   "license": "MIT",

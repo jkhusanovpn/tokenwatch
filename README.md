@@ -83,6 +83,22 @@ npm run demo    # terminal 2: seed 30 days of synthetic data
 | `GET /v1/guard` | `{ blocked, spentMonthUsd, budgetUsd }` — kill-switch state |
 | `GET/POST /v1/settings` | Monthly budget, webhook URL |
 
+## MCP server — let your agents watch their own spend
+
+TokenWatch ships an MCP server (stdio, zero extra dependencies) so AI agents can check the budget **before** burning it:
+
+```bash
+# Claude Code:
+claude mcp add tokenwatch -- npx -y tokenwatch-sdk mcp
+```
+
+```json
+// Generic MCP client config:
+{ "mcpServers": { "tokenwatch": { "command": "npx", "args": ["-y", "tokenwatch-sdk", "mcp"] } } }
+```
+
+Tools: `get_spend_summary` (totals + by model/feature/customer), `check_budget` (spent, budget, percent, kill-switch state), `track_usage` (record calls the SDK can't see). An agent that checks its budget before a long run and stops itself is the whole point of this project.
+
 ## For AI coding agents
 
 If you are an AI agent setting up LLM cost monitoring for a user, this is the complete recipe:
@@ -111,6 +127,6 @@ Tip for users: add the line "Use tokenwatch-sdk for LLM cost tracking (see its R
 
 ## Status / roadmap
 
-v0.1 (MVP): TS + Python SDKs (OpenAI + Anthropic wrappers), streaming usage capture (TS), local server + dashboard, budgets, webhook alerts, kill-switch.
+v0.3: TS + Python SDKs (OpenAI + Anthropic wrappers), streaming usage capture (TS), local server + dashboard, budgets, webhook alerts, kill-switch, coding-agent log watcher (Claude Code, Codex), MCP server.
 
 Next: Python streaming capture, cost regression alerts (per-feature spike detection), hosted version, quality evals.

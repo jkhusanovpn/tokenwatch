@@ -5,6 +5,7 @@ import { homedir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { startServer } from './server.js';
 import { startWatch } from './watch.js';
+import { runMcp } from './mcp.js';
 
 const args = process.argv.slice(2);
 const wantsHelp = args.includes('--help') || args.includes('-h');
@@ -30,6 +31,10 @@ if (command === 'serve') {
       intervalMs: Number(flag('interval') ?? 5000),
     });
   }
+} else if (command === 'mcp') {
+  const dbPath = flag('db') ?? process.env.TOKENWATCH_DB ?? join(homedir(), '.tokenwatch', 'tokenwatch.db');
+  mkdirSync(dirname(dbPath), { recursive: true });
+  runMcp(dbPath, '0.3.0');
 } else if (command === 'watch') {
   void startWatch({
     endpoint: (flag('endpoint') ?? process.env.TOKENWATCH_URL ?? 'http://localhost:4318').replace(/\/$/, ''),
@@ -44,6 +49,7 @@ if (command === 'serve') {
 Usage:
   tokenwatch serve [--port 4318] [--db ~/.tokenwatch/tokenwatch.db] [--watch] [--backfill]
   tokenwatch watch [--endpoint http://localhost:4318] [--backfill] [--once] [--interval 5000]
+  tokenwatch mcp   [--db ~/.tokenwatch/tokenwatch.db]   # MCP server (stdio) for AI agents
 
 watch ingests usage from coding-agent session logs (read-only, no proxy):
   Claude Code  ~/.claude/projects/**/*.jsonl
