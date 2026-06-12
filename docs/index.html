@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TokenWatch — Know where your LLM money goes</title>
+<meta name="description" content="Zero-config LLM cost & quality monitor for indie AI builders. One-line SDK, local dashboard, budget kill-switch. The lightweight Helicone alternative.">
+<style>
+  :root {
+    --bg: #0d1117; --card: #161b22; --border: #30363d;
+    --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff;
+    --green: #3fb950; --red: #f85149; --amber: #d29922;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 -apple-system, 'Segoe UI', Roboto, sans-serif; }
+  a { color: var(--accent); text-decoration: none; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+  nav { display: flex; align-items: center; padding: 18px 0; gap: 20px; }
+  nav .logo { font-size: 18px; font-weight: 700; color: var(--text); }
+  nav .logo span { color: var(--accent); }
+  nav .spacer { flex: 1; }
+  .btn { display: inline-block; padding: 10px 20px; border-radius: 8px; font-weight: 600; border: 1px solid var(--border); color: var(--text); }
+  .btn.primary { background: var(--accent); color: #0d1117; border-color: var(--accent); }
+  .btn:hover { filter: brightness(1.1); }
+  .hero { text-align: center; padding: 72px 0 48px; }
+  .hero h1 { font-size: 44px; line-height: 1.15; margin: 0 0 16px; }
+  .hero h1 em { color: var(--accent); font-style: normal; }
+  .hero p.sub { font-size: 19px; color: var(--muted); max-width: 640px; margin: 0 auto 28px; }
+  .install { display: inline-flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 20px; font-family: ui-monospace, monospace; font-size: 15px; margin-bottom: 16px; }
+  .install .dollar { color: var(--green); }
+  .ctas { display: flex; gap: 12px; justify-content: center; margin-top: 8px; }
+  .pain { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin: 40px 0; }
+  .pain blockquote { margin: 0; font-size: 18px; color: var(--text); }
+  .pain .src { color: var(--muted); font-size: 14px; margin-top: 10px; }
+  h2 { font-size: 28px; margin: 56px 0 20px; text-align: center; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .step { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .step .n { color: var(--accent); font-weight: 700; font-size: 13px; }
+  .step h3 { margin: 6px 0 8px; font-size: 17px; }
+  .step p { color: var(--muted); font-size: 14px; margin: 0; }
+  pre { background: #0a0d12; border: 1px solid var(--border); border-radius: 10px; padding: 16px; overflow-x: auto; font-size: 13.5px; line-height: 1.5; }
+  code { font-family: ui-monospace, 'SF Mono', monospace; }
+  .kw { color: #ff7b72; } .str { color: #a5d6ff; } .fn { color: #d2a8ff; } .cm { color: var(--muted); }
+  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .feature { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .feature h3 { margin: 0 0 8px; font-size: 16px; }
+  .feature p { color: var(--muted); font-size: 14px; margin: 0; }
+  table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 14px; }
+  th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 600; }
+  td:first-child { color: var(--muted); }
+  .yes { color: var(--green); } .no { color: var(--red); } .meh { color: var(--amber); }
+  .note { color: var(--muted); font-size: 13px; text-align: center; margin-top: 10px; }
+  footer { text-align: center; color: var(--muted); padding: 56px 0 40px; font-size: 14px; }
+  .final { text-align: center; padding: 24px 0 8px; }
+  @media (max-width: 640px) { .hero h1 { font-size: 32px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="logo">⏱ Token<span>Watch</span></div>
+    <div class="spacer"></div>
+    <a href="https://github.com/jkhusanovpn/tokenwatch">GitHub</a>
+    <a class="btn primary" href="#quickstart">Get started</a>
+  </nav>
+
+  <section class="hero">
+    <h1>Know where your <em>LLM money</em> goes</h1>
+    <p class="sub">Zero-config cost &amp; quality monitor for indie AI builders. One-line SDK, local dashboard, per-feature and per-customer attribution — and a budget kill-switch so an agent loop can never surprise you with the bill.</p>
+    <div class="install"><span class="dollar">$</span> npx tokenwatch-sdk serve</div>
+    <div class="ctas">
+      <a class="btn primary" href="#quickstart">Quickstart</a>
+      <a class="btn" href="https://github.com/jkhusanovpn/tokenwatch">Star on GitHub</a>
+    </div>
+  </section>
+
+  <div class="pain">
+    <blockquote>“We budgeted $4k/month for our agent. Three weeks later the bill was $11.2k — an uncapped recursive loop. The provider dashboard told us what we spent, not where.”</blockquote>
+    <div class="src">— the story every AI builder has heard (or lived). TokenWatch exists so it never happens to you.</div>
+  </div>
+
+  <h2 id="quickstart">Up and running in two minutes</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="n">STEP 1</div>
+      <h3>Start the dashboard</h3>
+      <p><code>npx tokenwatch-sdk serve</code> — one process, SQLite, no Docker, no Postgres, no ClickHouse. Your data stays on your machine.</p>
+    </div>
+    <div class="step">
+      <div class="n">STEP 2</div>
+      <h3>Wrap your client</h3>
+      <p>One line for OpenAI or Anthropic, TypeScript or Python. No proxy in your request path — telemetry ships async on the side.</p>
+    </div>
+    <div class="step">
+      <div class="n">STEP 3</div>
+      <h3>See everything</h3>
+      <p>Cost by model, feature, and customer. Latency, error rates, daily trends. Set a budget — get webhook alerts at 80% and a hard stop at 100%.</p>
+    </div>
+  </div>
+
+  <pre><code><span class="kw">import</span> { wrapAnthropic, init } <span class="kw">from</span> <span class="str">'tokenwatch-sdk'</span>;
+
+<span class="kw">const</span> claude = <span class="fn">wrapAnthropic</span>(<span class="kw">new</span> <span class="fn">Anthropic</span>(), { feature: <span class="str">'summarize'</span>, customerId: <span class="str">'acme'</span> });
+<span class="fn">init</span>({ enforceBudget: <span class="kw">true</span> });  <span class="cm">// over budget → BudgetExceededError, not a bigger bill</span>
+
+<span class="cm">// That's it. Every call (streaming included) is now tracked:</span>
+<span class="cm">// model, tokens, cost, latency, errors — attributed to features and customers.</span></code></pre>
+
+  <h2>Why TokenWatch</h2>
+  <div class="features">
+    <div class="feature"><h3>🚫 No proxy, no risk</h3><p>Your requests go straight to the provider. A monitoring tool should never be a single point of failure in your request path.</p></div>
+    <div class="feature"><h3>💸 Margin attribution</h3><p>Cost per feature and per customer — know which features lose money and which customers are profitable, not just the total.</p></div>
+    <div class="feature"><h3>🛑 Budget kill-switch</h3><p>Set a monthly budget. At 80% your webhook fires; at 100% wrapped calls throw instead of spending. Agents can't out-loop you.</p></div>
+    <div class="feature"><h3>📦 Actually self-hostable</h3><p>One process and a SQLite file. No ClickHouse + Postgres + Redis + S3 stack just to see your own spend.</p></div>
+    <div class="feature"><h3>🐍 TS and Python</h3><p>Both SDKs included. The Python SDK has literally zero dependencies — standard library only.</p></div>
+    <div class="feature"><h3>🔓 MIT, no rug-pull</h3><p>Open source. Flat simple pricing for the upcoming cloud version — never per-seat enterprise games.</p></div>
+  </div>
+
+  <h2>The honest comparison</h2>
+  <table>
+    <tr><th></th><th>TokenWatch</th><th>Helicone</th><th>Langfuse</th><th>Enterprise APMs</th></tr>
+    <tr><td>Actively developed</td><td class="yes">✓</td><td class="no">maintenance mode</td><td class="yes">✓ (ClickHouse-owned)</td><td class="yes">✓</td></tr>
+    <tr><td>Request path</td><td class="yes">no proxy</td><td class="meh">proxy or async</td><td class="yes">async</td><td class="yes">async</td></tr>
+    <tr><td>Self-host stack</td><td class="yes">1 process + SQLite</td><td class="meh">heavy</td><td class="no">ClickHouse+PG+Redis+S3</td><td class="no">n/a</td></tr>
+    <tr><td>Budget kill-switch</td><td class="yes">✓ built-in</td><td class="meh">limits</td><td class="no">—</td><td class="meh">alerts only</td></tr>
+    <tr><td>Built for</td><td class="yes">solo devs / small teams</td><td class="meh">teams</td><td class="meh">teams</td><td class="no">enterprises</td></tr>
+  </table>
+  <p class="note">Helicone entered maintenance mode after its acquisition (March 2026). Langfuse is excellent for enterprise tracing — TokenWatch is for the rest of us.</p>
+
+  <div class="final">
+    <h2>Stop guessing what your AI costs</h2>
+    <div class="install"><span class="dollar">$</span> npx tokenwatch-sdk serve</div>
+    <div class="ctas">
+      <a class="btn primary" href="https://github.com/jkhusanovpn/tokenwatch">Get TokenWatch on GitHub</a>
+    </div>
+  </div>
+
+  <footer>MIT licensed · built in public · TokenWatch 2026</footer>
+</div>
+</body>
+</html>
