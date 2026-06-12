@@ -6,7 +6,19 @@
  */
 import { init, track, flush } from '../src/sdk.js';
 
-init({ endpoint: process.env.TOKENWATCH_URL ?? 'http://localhost:4318' });
+const endpoint = process.env.TOKENWATCH_URL ?? 'http://localhost:4318';
+init({ endpoint });
+
+// Refuse to pollute a database that already has real (non-demo) data.
+const stats = (await (await fetch(`${endpoint}/v1/stats?days=365`)).json()) as any;
+const realEvents = stats.totals.calls - (stats.byFeature ?? [])
+  .filter((f: { name: string }) => f.name.startsWith('demo-'))
+  .reduce((s: number, f: { calls: number }) => s + f.calls, 0);
+if (realEvents > 0 && !process.argv.includes('--force')) {
+  console.error(`This server already has ${realEvents} real events — refusing to mix in demo data.`);
+  console.error('Run against a scratch server (tokenwatch serve --db /tmp/demo.db) or pass --force.');
+  process.exit(1);
+}
 
 const MODELS = [
   { model: 'claude-fable-5', provider: 'anthropic', weight: 0.15, avgIn: 3200, avgOut: 900 },
@@ -15,8 +27,8 @@ const MODELS = [
   { model: 'gemini-3.5-flash', provider: 'google', weight: 0.2, avgIn: 1800, avgOut: 500 },
   { model: 'deepseek-v4', provider: 'deepseek', weight: 0.15, avgIn: 2000, avgOut: 600 },
 ];
-const FEATURES = ['chat', 'summarize', 'doc-search', 'autotag'];
-const CUSTOMERS = ['acme', 'globex', 'initech', 'umbrella', 'stark', 'wayne', 'hooli', 'piedpiper'];
+const FEATURES = ['demo-chat', 'demo-summarize', 'demo-doc-search', 'demo-autotag'];
+const CUSTOMERS = ['demo-acme', 'demo-globex', 'demo-initech', 'demo-umbrella', 'demo-stark', 'demo-wayne', 'demo-hooli', 'demo-piedpiper'];
 
 function pickModel() {
   let r = Math.random();
