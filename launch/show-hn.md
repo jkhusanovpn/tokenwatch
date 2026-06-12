@@ -12,7 +12,7 @@ v0.1, MIT. The pricing table covers June-2026 models and is overridable. Streami
 
 Things I'd love feedback on: the no-proxy tradeoff (you lose request bodies, keep reliability), whether kill-switch-as-exception is the right ergonomics, and what "quality regression" detection should look like for a tool this small.
 
-https://github.com/javoxir/tokenwatch
+https://github.com/jkhusanovpn/tokenwatch
 
 ---
 

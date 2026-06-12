@@ -7,7 +7,7 @@
   "keywords": ["llm", "observability", "cost-tracking", "openai", "anthropic", "claude", "monitoring", "helicone-alternative"],
   "repository": {
     "type": "git",
-    "url": "https://github.com/javoxir/tokenwatch"
+    "url": "https://github.com/jkhusanovpn/tokenwatch"
   },
   "bin": {
     "tokenwatch": "./dist/cli.js"

@@ -39,6 +39,6 @@ It's not a tracing platform, it's not an eval suite, and it won't replace Langfu
 
 It's MIT-licensed and v0.1 — built in public, partly *with* AI agents (Claude Code wrote a lot of it, which felt appropriately recursive for a tool that monitors AI spend). Feedback, issues, and brutal honesty welcome.
 
-**GitHub:** https://github.com/javoxir/tokenwatch
+**GitHub:** https://github.com/jkhusanovpn/tokenwatch
 
 *What's your current setup for tracking LLM costs — and has an agent ever surprised you with a bill?*

@@ -46,4 +46,4 @@ Design choices:
 It's v0.1 and I'm building in public. A lot of it was written with Claude Code — an AI agent helping build the tool that stops AI agents from overspending. Felt right.
 
 Star it, break it, tell me what's missing:
-https://github.com/javoxir/tokenwatch
+https://github.com/jkhusanovpn/tokenwatch
