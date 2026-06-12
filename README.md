@@ -10,7 +10,7 @@
 
 ```bash
 # 1. Start the server + dashboard (http://localhost:4318)
-npx tokenwatch serve
+npx tokenwatch-sdk serve
 
 # 2. Wrap your client (one line)
 ```

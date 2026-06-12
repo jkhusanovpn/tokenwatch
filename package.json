@@ -1,9 +1,14 @@
 {
-  "name": "tokenwatch",
+  "name": "tokenwatch-sdk",
   "version": "0.1.0",
   "description": "Zero-config LLM cost & quality monitor for indie AI builders. One-line SDK, local dashboard, budget kill-switch.",
   "type": "module",
   "license": "MIT",
+  "keywords": ["llm", "observability", "cost-tracking", "openai", "anthropic", "claude", "monitoring", "helicone-alternative"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/javoxir/tokenwatch"
+  },
   "bin": {
     "tokenwatch": "./dist/cli.js"
   },
@@ -13,9 +18,12 @@
     ".": "./dist/sdk.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
+    "prepublishOnly": "npm run build",
     "dev": "tsx src/cli.ts serve",
     "build": "tsc -p tsconfig.json",
     "demo": "tsx scripts/demo.ts",

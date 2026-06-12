@@ -5,7 +5,8 @@ import { join, dirname } from 'node:path';
 import { startServer } from './server.js';
 
 const args = process.argv.slice(2);
-const command = args[0] && !args[0].startsWith('-') ? args[0] : 'serve';
+const wantsHelp = args.includes('--help') || args.includes('-h');
+const command = wantsHelp ? 'help' : args[0] && !args[0].startsWith('-') ? args[0] : 'serve';
 
 function flag(name: string): string | undefined {
   const i = args.indexOf(`--${name}`);
