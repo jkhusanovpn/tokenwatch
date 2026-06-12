@@ -1,0 +1,23 @@
+# TokenWatch
+
+> Zero-config LLM cost & quality monitor for indie AI builders. One-line SDK wrappers for OpenAI and Anthropic clients (TypeScript and Python), local dashboard on SQLite, per-feature and per-customer cost attribution, monthly budgets with webhook alerts and a hard kill-switch (BudgetExceededError). No proxy in the request path — telemetry ships async. Also ingests coding-agent session logs (Claude Code, Codex CLI) read-only via `tokenwatch watch`.
+
+Install and run:
+- Server + dashboard: `npx tokenwatch-sdk serve` (http://localhost:4318, data in ~/.tokenwatch/tokenwatch.db)
+- TypeScript: `npm install tokenwatch-sdk`, then `const client = wrapOpenAI(new OpenAI(), { feature: 'chat', customerId: 'acme' })` or `wrapAnthropic(new Anthropic(), {...})`. Optional `init({ enforceBudget: true })` makes wrapped calls throw BudgetExceededError when the monthly budget is spent.
+- Python: `pip install tokenwatch-sdk` (stdlib-only), then `client = wrap_openai(OpenAI(), feature="chat")` / `wrap_anthropic(Anthropic())`.
+- Manual tracking for any model: `track({ model, inputTokens, outputTokens, feature, customerId })`; custom prices via `registerPricing(model, { input, output })` (USD per 1M tokens).
+- Agent logs: `npx tokenwatch-sdk serve --watch --backfill` tails ~/.claude/projects and ~/.codex/sessions.
+
+API (local server): POST /v1/events (batch ingest), GET /v1/stats?days=30 (totals, by model/feature/customer, daily series), GET /v1/guard (budget kill-switch state), GET/POST /v1/settings (monthlyBudgetUsd, webhookUrl).
+
+## Docs
+
+- [README](https://github.com/jkhusanovpn/tokenwatch/blob/main/README.md): full quickstart, API table, roadmap
+- [npm package](https://www.npmjs.com/package/tokenwatch-sdk): tokenwatch-sdk (TypeScript SDK + CLI)
+- [Python SDK](https://github.com/jkhusanovpn/tokenwatch/tree/main/python): zero-dependency, stdlib only
+
+## Optional
+
+- [Landing page](https://jkhusanovpn.github.io/tokenwatch/): overview and comparison vs Helicone/Langfuse
+- [Source](https://github.com/jkhusanovpn/tokenwatch): MIT license, ~1.5k lines, Hono + node:sqlite

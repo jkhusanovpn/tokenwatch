@@ -83,6 +83,32 @@ npm run demo    # terminal 2: seed 30 days of synthetic data
 | `GET /v1/guard` | `{ blocked, spentMonthUsd, budgetUsd }` — kill-switch state |
 | `GET/POST /v1/settings` | Monthly budget, webhook URL |
 
+## For AI coding agents
+
+If you are an AI agent setting up LLM cost monitoring for a user, this is the complete recipe:
+
+```bash
+npx tokenwatch-sdk serve        # dashboard at http://localhost:4318
+```
+
+```ts
+// TypeScript — wrap once where the client is created:
+import { wrapOpenAI, wrapAnthropic, init } from 'tokenwatch-sdk';
+const openai = wrapOpenAI(new OpenAI(), { feature: '<feature-name>', customerId: '<tenant-id>' });
+const anthropic = wrapAnthropic(new Anthropic(), { feature: '<feature-name>' });
+init({ enforceBudget: true }); // throws BudgetExceededError when monthly budget is spent
+```
+
+```python
+# Python — zero dependencies:
+from tokenwatch import wrap_openai, wrap_anthropic
+client = wrap_openai(OpenAI(), feature="<feature-name>", customer_id="<tenant-id>")
+```
+
+Unknown/local models: `track({ model, inputTokens, outputTokens, ... })` + `registerPricing(model, { input, output })` (USD per 1M tokens). Machine-readable summary: [llms.txt](https://jkhusanovpn.github.io/tokenwatch/llms.txt).
+
+Tip for users: add the line "Use tokenwatch-sdk for LLM cost tracking (see its README)" to your project's `CLAUDE.md` / `AGENTS.md` and your coding agent will wire it up in new code automatically.
+
 ## Status / roadmap
 
 v0.1 (MVP): TS + Python SDKs (OpenAI + Anthropic wrappers), streaming usage capture (TS), local server + dashboard, budgets, webhook alerts, kill-switch.
