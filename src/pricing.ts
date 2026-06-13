@@ -16,6 +16,8 @@ const PRICING: Record<string, ModelPrice> = {
   'claude-haiku-4-5': { input: 1, output: 5 },
   'gpt-5.5-pro': { input: 30, output: 180 },
   'gpt-5.5': { input: 5, output: 30 },
+  'gpt-5.4': { input: 5, output: 30 },
+  'gpt-5.3': { input: 5, output: 30 },
   'gemini-3.5-flash': { input: 1.5, output: 9 },
   'gemini-3.1-pro': { input: 2, output: 12 },
   'grok-4.3': { input: 1.25, output: 2.5 },
@@ -36,6 +38,11 @@ export function findPrice(model: string): ModelPrice | undefined {
   const m = model.toLowerCase();
   const key = keysByLength.find((k) => m.includes(k));
   return key ? PRICING[key] : undefined;
+}
+
+/** True when the model is in the pricing table (so its cost is real, not a silent $0). */
+export function isPriced(model: string): boolean {
+  return findPrice(model) !== undefined;
 }
 
 /** Returns cost in USD, or 0 if the model is unknown (track it anyway). */

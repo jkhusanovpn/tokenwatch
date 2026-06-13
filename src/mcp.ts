@@ -6,7 +6,7 @@
 import { createInterface } from 'node:readline';
 import { createRequire } from 'node:module';
 import { SCHEMA } from './schema.js';
-import { computeCostUsd } from './pricing.js';
+import { computeCostUsd, isPriced } from './pricing.js';
 
 const { DatabaseSync } = createRequire(import.meta.url)('node:sqlite') as typeof import('node:sqlite');
 
@@ -76,15 +76,20 @@ export function runMcp(dbPath: string, version: string): void {
         )
         .all(since) as Array<{ name: string; costUsd: number; calls: number }>)
         .map((r) => ({ ...r, costUsd: round(r.costUsd) }));
+    const byModel = group('model').map((m) => (isPriced(m.name) ? m : { ...m, priced: false }));
+    const unpriced = byModel.filter((m) => (m as { priced?: boolean }).priced === false).map((m) => m.name);
     return {
       periodDays: days || 30,
       totalCostUsd: round(totals.costUsd),
       calls: totals.calls,
       tokens: totals.tokens,
       errors: totals.errors,
-      byModel: group('model'),
+      byModel,
       byFeature: group('feature'),
       byCustomer: group('customer_id'),
+      ...(unpriced.length
+        ? { note: `Cost is understated: no pricing for ${unpriced.join(', ')} — calls counted, cost shown as $0. Add prices via registerPricing().` }
+        : {}),
     };
   }
 

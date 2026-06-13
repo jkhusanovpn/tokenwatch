@@ -55,6 +55,7 @@ export const dashboardHtml = `<!doctype html>
   <button id="saveBudget">Save</button>
 </header>
 <main>
+  <div id="unpricedBanner" style="display:none; background:#3d2c00; border:1px solid var(--amber); color:#f0c674; border-radius:10px; padding:10px 14px; margin-bottom:12px; font-size:13px;"></div>
   <div class="cards">
     <div class="card"><div class="label">Spend (period)</div><div class="value" id="spend">–</div><div class="sub" id="calls"></div></div>
     <div class="card"><div class="label">This month</div><div class="value" id="month">–</div><div class="sub" id="budgetState"></div><div class="budgetbar"><div id="budgetFill" style="width:0%"></div></div></div>
@@ -100,6 +101,14 @@ async function load() {
   $('errors').textContent = errRate.toFixed(1) + '%';
   $('errors').className = 'value ' + (errRate > 5 ? 'err' : 'ok');
   $('errorCount').textContent = num(t.errors) + ' errors';
+
+  const banner = $('unpricedBanner');
+  if (s.unpricedModels && s.unpricedModels.length) {
+    banner.style.display = 'block';
+    banner.textContent = '⚠ No pricing for: ' + s.unpricedModels.join(', ') + ' — these calls are counted but shown as $0, so total cost is understated. Add prices via registerPricing().';
+  } else {
+    banner.style.display = 'none';
+  }
 
   $('month').textContent = usd(s.month.spentUsd);
   if (s.month.budgetUsd) {

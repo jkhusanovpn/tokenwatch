@@ -34,7 +34,7 @@ if (command === 'serve') {
 } else if (command === 'mcp') {
   const dbPath = flag('db') ?? process.env.TOKENWATCH_DB ?? join(homedir(), '.tokenwatch', 'tokenwatch.db');
   mkdirSync(dirname(dbPath), { recursive: true });
-  runMcp(dbPath, '0.3.0');
+  runMcp(dbPath, '0.3.1');
 } else if (command === 'watch') {
   void startWatch({
     endpoint: (flag('endpoint') ?? process.env.TOKENWATCH_URL ?? 'http://localhost:4318').replace(/\/$/, ''),

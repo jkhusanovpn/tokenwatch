@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
 import { createRequire } from 'node:module';
-import { computeCostUsd } from './pricing.js';
+import { computeCostUsd, isPriced } from './pricing.js';
 import { dashboardHtml } from './dashboard.js';
 
 // Lazy-require node:sqlite so its ExperimentalWarning fires after our suppressor
@@ -148,6 +148,11 @@ export function createApp(dbPath: string) {
         )
         .all(since);
 
+    const byModel = (groupBy('model') as Array<{ name: string }>).map((m) =>
+      isPriced(m.name) ? m : { ...m, priced: false }
+    );
+    const unpricedModels = byModel.filter((m) => (m as { priced?: boolean }).priced === false).map((m) => m.name);
+
     const daily = db
       .prepare(
         `SELECT date(ts / 1000, 'unixepoch') AS day, SUM(cost_usd) AS costUsd, COUNT(*) AS calls
@@ -166,7 +171,8 @@ export function createApp(dbPath: string) {
     return c.json({
       periodDays: days,
       totals,
-      byModel: groupBy('model'),
+      byModel,
+      unpricedModels,
       byFeature: groupBy('feature'),
       byCustomer: groupBy('customer_id'),
       daily,
