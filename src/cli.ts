@@ -6,6 +6,7 @@ import { join, dirname } from 'node:path';
 import { startServer } from './server.js';
 import { startWatch } from './watch.js';
 import { runMcp } from './mcp.js';
+import { loadPricing } from './pricing-loader.js';
 
 const args = process.argv.slice(2);
 const wantsHelp = args.includes('--help') || args.includes('-h');
@@ -17,10 +18,24 @@ function flag(name: string): string | undefined {
 }
 const has = (name: string): boolean => args.includes(`--${name}`);
 
+// Refresh prices from the remote pricing.json (+ local override) before serving.
+// Fails open to cache/built-in. stderr only — never pollutes the MCP stdout channel.
+async function refreshPricing(): Promise<void> {
+  const r = await loadPricing({ remote: !has('no-remote-pricing'), url: flag('pricing-url') });
+  if (r.source !== 'builtin' || r.overrideModels > 0) {
+    console.error(
+      `pricing: ${r.source}${r.updated ? ` (updated ${r.updated})` : ''}` +
+        `, ${r.remoteModels} models` +
+        (r.overrideModels ? ` + ${r.overrideModels} local override(s)` : '')
+    );
+  }
+}
+
 if (command === 'serve') {
   const port = Number(flag('port') ?? process.env.TOKENWATCH_PORT ?? process.env.PORT ?? 4318);
   const dbPath = flag('db') ?? process.env.TOKENWATCH_DB ?? join(homedir(), '.tokenwatch', 'tokenwatch.db');
   mkdirSync(dirname(dbPath), { recursive: true });
+  await refreshPricing();
   startServer({ port, dbPath });
   if (has('watch')) {
     void startWatch({
@@ -34,8 +49,10 @@ if (command === 'serve') {
 } else if (command === 'mcp') {
   const dbPath = flag('db') ?? process.env.TOKENWATCH_DB ?? join(homedir(), '.tokenwatch', 'tokenwatch.db');
   mkdirSync(dirname(dbPath), { recursive: true });
-  runMcp(dbPath, '0.3.1');
+  await refreshPricing();
+  runMcp(dbPath, '0.4.0');
 } else if (command === 'watch') {
+  await refreshPricing();
   void startWatch({
     endpoint: (flag('endpoint') ?? process.env.TOKENWATCH_URL ?? 'http://localhost:4318').replace(/\/$/, ''),
     apiKey: process.env.TOKENWATCH_API_KEY,
@@ -56,6 +73,11 @@ watch ingests usage from coding-agent session logs (read-only, no proxy):
   Codex CLI    ~/.codex/sessions/**/*.jsonl
 --backfill processes existing history; default tracks new usage only.
 
+Pricing refreshes on startup from a static pricing.json (cached, fails open to
+built-in). --no-remote-pricing disables it; ~/.tokenwatch/pricing.json overrides
+locally. Current effective prices: GET /v1/pricing.
+
 Env:
-  TOKENWATCH_PORT, TOKENWATCH_DB, TOKENWATCH_URL, TOKENWATCH_API_KEY`);
+  TOKENWATCH_PORT, TOKENWATCH_DB, TOKENWATCH_URL, TOKENWATCH_API_KEY,
+  TOKENWATCH_PRICING_URL, TOKENWATCH_NO_REMOTE_PRICING=1`);
 }

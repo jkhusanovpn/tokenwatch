@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
 import { createRequire } from 'node:module';
-import { computeCostUsd, isPriced } from './pricing.js';
+import { computeCostUsd, isPriced, builtinPricing } from './pricing.js';
 import { dashboardHtml } from './dashboard.js';
 
 // Lazy-require node:sqlite so its ExperimentalWarning fires after our suppressor
@@ -190,6 +190,9 @@ export function createApp(dbPath: string) {
       budgetUsd: budget,
     });
   });
+
+  // Effective in-memory pricing (built-in + remote + local override merged at startup).
+  app.get('/v1/pricing', (c) => c.json({ currency: 'usd_per_1m_tokens', models: builtinPricing() }));
 
   app.get('/v1/settings', (c) =>
     c.json({ monthlyBudgetUsd: budgetUsd(), webhookUrl: getSetting('webhookUrl') })

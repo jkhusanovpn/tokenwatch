@@ -34,6 +34,24 @@ export function registerPricing(model: string, price: ModelPrice): void {
   keysByLength = Object.keys(PRICING).sort((a, b) => b.length - a.length);
 }
 
+/** Bulk-merge a { model: {input, output} } map (e.g. from remote pricing.json or a local override). */
+export function mergePricing(table: Record<string, ModelPrice>): number {
+  let n = 0;
+  for (const [model, price] of Object.entries(table)) {
+    if (price && typeof price.input === 'number' && typeof price.output === 'number') {
+      PRICING[model.toLowerCase()] = { input: price.input, output: price.output };
+      n++;
+    }
+  }
+  keysByLength = Object.keys(PRICING).sort((a, b) => b.length - a.length);
+  return n;
+}
+
+/** The built-in seed table — used to generate the canonical pricing.json. */
+export function builtinPricing(): Record<string, ModelPrice> {
+  return { ...PRICING };
+}
+
 export function findPrice(model: string): ModelPrice | undefined {
   const m = model.toLowerCase();
   const key = keysByLength.find((k) => m.includes(k));
