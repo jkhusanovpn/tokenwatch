@@ -16,13 +16,13 @@ const PRICING: Record<string, ModelPrice> = {
   'claude-haiku-4-5': { input: 1, output: 5 },
   'gpt-5.5-pro': { input: 30, output: 180 },
   'gpt-5.5': { input: 5, output: 30 },
-  'gpt-5.4': { input: 5, output: 30 },
+  'gpt-5.4': { input: 2.5, output: 15 },
   'gpt-5.3': { input: 5, output: 30 },
   'gemini-3.5-flash': { input: 1.5, output: 9 },
   'gemini-3.1-pro': { input: 2, output: 12 },
   'grok-4.3': { input: 1.25, output: 2.5 },
-  'deepseek-v4': { input: 0.3, output: 0.87 },
-  'glm-5': { input: 0.6, output: 1.92 },
+  'deepseek-v4': { input: 0.27, output: 1.1 },
+  'glm-5': { input: 1.0, output: 3.2 },
   'kimi-k2.6': { input: 0.6, output: 2.5 },
 };
 
