@@ -35,8 +35,8 @@
       "output": 30
     },
     "gpt-5.4": {
-      "input": 5,
-      "output": 30
+      "input": 2.5,
+      "output": 15
     },
     "gpt-5.3": {
       "input": 5,
@@ -55,12 +55,12 @@
       "output": 2.5
     },
     "deepseek-v4": {
-      "input": 0.3,
-      "output": 0.87
+      "input": 0.27,
+      "output": 1.1
     },
     "glm-5": {
-      "input": 0.6,
-      "output": 1.92
+      "input": 1,
+      "output": 3.2
     },
     "kimi-k2.6": {
       "input": 0.6,
